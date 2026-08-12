@@ -21,6 +21,9 @@ class Pago extends Model
         'fecha_pago' => 'date',
     ];
 
+    /**
+     * Aplicaciones de este pago.
+     */
     public function aplicaciones(): HasMany
     {
         return $this->hasMany(

@@ -13,12 +13,19 @@ class AplicacionPago extends Model
         'pago_id',
         'cuota_id',
         'monto_aplicado',
+        'monto_capital',
+        'monto_interes',
     ];
 
     protected $casts = [
         'monto_aplicado' => 'decimal:2',
+        'monto_capital' => 'decimal:2',
+        'monto_interes' => 'decimal:2',
     ];
 
+    /**
+     * Pago al que pertenece esta aplicación.
+     */
     public function pago(): BelongsTo
     {
         return $this->belongsTo(
@@ -27,11 +34,14 @@ class AplicacionPago extends Model
         );
     }
 
+    /**
+     * Cuota a la que se aplicó el pago.
+     */
     public function cuota(): BelongsTo
     {
         return $this->belongsTo(
             Cuota::class,
-            'cuota_id' 
+            'cuota_id'
         );
     }
 }

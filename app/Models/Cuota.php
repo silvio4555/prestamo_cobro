@@ -14,27 +14,63 @@ class Cuota extends Model
         'prestamo_id',
         'numero_cuota',
         'fecha_vencimiento',
+
         'valor_programado',
+
+        'capital_programado',
+        'interes_programado',
+
         'valor_pagado',
+
+        'capital_pagado',
+        'interes_pagado',
+
         'saldo_pendiente',
+
+        'saldo_capital',
+        'saldo_interes',
+
         'estado',
         'fecha_pago_completo',
         'dias_retraso',
     ];
 
     protected $casts = [
+        'valor_programado' => 'decimal:2',
+
+        'capital_programado' => 'decimal:2',
+        'interes_programado' => 'decimal:2',
+
+        'valor_pagado' => 'decimal:2',
+
+        'capital_pagado' => 'decimal:2',
+        'interes_pagado' => 'decimal:2',
+
+        'saldo_pendiente' => 'decimal:2',
+
+        'saldo_capital' => 'decimal:2',
+        'saldo_interes' => 'decimal:2',
+
         'fecha_vencimiento' => 'date',
         'fecha_pago_completo' => 'date',
-        'valor_programado' => 'decimal:2',
-        'valor_pagado' => 'decimal:2',
-        'saldo_pendiente' => 'decimal:2',
+
+        'dias_retraso' => 'integer',
     ];
 
+    /**
+     * Préstamo al que pertenece la cuota.
+     */
     public function prestamo(): BelongsTo
     {
-        return $this->belongsTo(Prestamo::class, 'prestamo_id');
+        return $this->belongsTo(
+            Prestamo::class,
+            'prestamo_id'
+        );
     }
 
+    /**
+     * Pagos aplicados a esta cuota.
+     */
     public function aplicacionesPagos(): HasMany
     {
         return $this->hasMany(
