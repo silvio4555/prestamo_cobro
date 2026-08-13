@@ -12,396 +12,540 @@
 
 <body class="min-h-screen bg-gray-100">
 
-<div class="mx-auto max-w-7xl px-6 py-10">
+<div class="flex min-h-screen">
 
-    {{-- MENSAJE DE ÉXITO --}}
-    @if(session('success'))
+    <!-- ========================================= -->
+    <!-- MENÚ LATERAL -->
+    <!-- ========================================= -->
 
-        <div class="mb-6 flex items-center gap-3 rounded-lg border border-green-300 bg-green-100 px-5 py-4 text-green-700">
-            <span class="text-lg">✓</span>
-            {{ session('success') }}
-        </div>
+    <aside class="flex w-64 flex-col bg-slate-900 text-white">
 
-    @endif
+        <!-- Logo -->
+        <div class="flex h-20 items-center border-b border-slate-700 px-6">
 
+            <div class="flex items-center gap-3">
 
-    {{-- ENCABEZADO --}}
-    <div class="mb-8 overflow-hidden rounded-xl bg-blue-600 shadow-sm">
+                <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600 text-xl">
+                    💰
+                </div>
 
-        <div class="flex flex-col gap-4 p-8 text-white sm:flex-row sm:items-center sm:justify-between">
-
-            <div>
-
-                <p class="text-sm font-medium text-blue-100">
-                    {{ ucfirst($hoy->locale('es')->isoFormat('dddd, D [de] MMMM')) }}
-                </p>
-
-                <h1 class="mt-1 text-3xl font-bold">
-                    Dashboard de cobros
-                </h1>
-
-                <p class="mt-1 text-blue-100">
-                    Esto es lo que tienes por cobrar hoy
-                </p>
+                <div>
+                    <h1 class="text-lg font-bold">Préstamos</h1>
+                    <p class="text-xs text-slate-400">Sistema de cobros</p>
+                </div>
 
             </div>
 
+        </div>
+
+        <!-- Navegación -->
+        <nav class="flex-1 space-y-2 p-4">
+
+            <a
+                href="{{ route('dashboard.index') }}"
+                class="flex items-center gap-3 rounded-lg bg-blue-600 px-4 py-3 font-medium text-white transition"
+            >
+                <span>🏠</span>
+                <span>Dashboard</span>
+            </a>
+
             <a
                 href="{{ route('clientes.index') }}"
-                class="inline-flex items-center gap-2 self-start rounded-lg bg-white px-5 py-3 font-semibold text-blue-700 shadow-sm transition hover:bg-blue-50"
+                class="flex items-center gap-3 rounded-lg px-4 py-3 text-slate-300 transition hover:bg-slate-800 hover:text-white"
             >
-                👥 Ver clientes
+                <span>👥</span>
+                <span>Clientes</span>
+            </a>
+
+            <a
+                href="{{ route('contabilidad.index') }}"
+                class="flex items-center gap-3 rounded-lg px-4 py-3 text-slate-300 transition hover:bg-slate-800 hover:text-white"
+            >
+                <span>🧮</span>
+                <span>Contabilidad</span>
+            </a>
+
+            <a
+                href="#"
+                class="flex items-center gap-3 rounded-lg px-4 py-3 text-slate-300 transition hover:bg-slate-800 hover:text-white"
+            >
+                <span>📊</span>
+                <span>Reportes</span>
+            </a>
+
+        </nav>
+
+        <!-- Parte inferior -->
+        <div class="border-t border-slate-700 p-4">
+
+            <a
+                href="#"
+                class="flex items-center gap-3 rounded-lg px-4 py-3 text-slate-300 transition hover:bg-slate-800 hover:text-white"
+            >
+                <span>⚙️</span>
+                <span>Configuración</span>
             </a>
 
         </div>
 
-    </div>
+    </aside>
 
 
-    {{-- TARJETAS RESUMEN --}}
-    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+    <!-- ========================================= -->
+    <!-- CONTENIDO PRINCIPAL -->
+    <!-- ========================================= -->
 
-        <div class="flex items-start gap-4 rounded-xl border-l-4 border-blue-600 bg-white p-6 shadow-sm transition hover:shadow-md">
+    <div class="flex flex-1 flex-col">
 
-            <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 text-2xl">
-                📅
+        <!-- HEADER -->
+        <header class="flex h-20 items-center justify-between border-b border-gray-200 bg-white px-8">
+
+            <h2 class="text-xl font-semibold text-gray-800">
+                Dashboard
+            </h2>
+
+            <div class="flex items-center gap-3">
+
+                <div class="text-right">
+                    <p class="text-sm font-semibold text-gray-700">Administrador</p>
+                    <p class="text-xs text-gray-500">Usuario principal</p>
+                </div>
+
+                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 font-bold text-blue-700">
+                    A
+                </div>
+
             </div>
 
-            <div>
-                <p class="text-sm text-gray-500">Por cobrar hoy</p>
-
-                <p class="mt-1 text-2xl font-bold text-blue-600">
-                    ${{ number_format($totalHoy, 2, ',', '.') }}
-                </p>
-
-                <p class="mt-1 text-sm text-gray-500">
-                    {{ $cobrosHoy->count() }} {{ Str::plural('cuota', $cobrosHoy->count()) }}
-                </p>
-            </div>
-
-        </div>
-
-        <div class="flex items-start gap-4 rounded-xl border-l-4 border-red-600 bg-white p-6 shadow-sm transition hover:shadow-md">
-
-            <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 text-2xl">
-                🔴
-            </div>
-
-            <div>
-                <p class="text-sm text-gray-500">Vencido</p>
-
-                <p class="mt-1 text-2xl font-bold text-red-600">
-                    ${{ number_format($totalVencido, 2, ',', '.') }}
-                </p>
-
-                <p class="mt-1 text-sm text-gray-500">
-                    {{ $cobrosVencidos->count() }} {{ Str::plural('cuota', $cobrosVencidos->count()) }}
-                </p>
-            </div>
-
-        </div>
-
-        <div class="flex items-start gap-4 rounded-xl border-l-4 border-green-600 bg-white p-6 shadow-sm transition hover:shadow-md">
-
-            <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-green-100 text-2xl">
-                💵
-            </div>
-
-            <div>
-                <p class="text-sm text-gray-500">Cobrado hoy</p>
-
-                <p class="mt-1 text-2xl font-bold text-green-600">
-                    ${{ number_format($cobradoHoy, 2, ',', '.') }}
-                </p>
-
-                <p class="mt-1 text-sm text-gray-500">
-                    Pagos registrados hoy
-                </p>
-            </div>
-
-        </div>
-
-        <div class="flex items-start gap-4 rounded-xl border-l-4 border-gray-400 bg-white p-6 shadow-sm transition hover:shadow-md">
-
-            <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gray-100 text-2xl">
-                👤
-            </div>
-
-            <div>
-                <p class="text-sm text-gray-500">Clientes por cobrar</p>
-
-                <p class="mt-1 text-2xl font-bold text-gray-800">
-                    {{ $clientesConDeuda->count() }}
-                </p>
-
-                <p class="mt-1 text-sm text-gray-500">
-                    Con cobros hoy o vencidos
-                </p>
-            </div>
-
-        </div>
-
-    </div>
+        </header>
 
 
-    {{-- CLIENTES QUE DEBEN PAGAR --}}
-    <div class="mt-8 overflow-hidden rounded-xl bg-white shadow-sm">
+        <!-- CONTENIDO -->
+        <main class="flex-1 overflow-y-auto p-8">
 
-        <div class="flex items-center justify-between border-b border-gray-200 p-6">
+            {{-- MENSAJE DE ÉXITO --}}
+            @if(session('success'))
 
-            <div>
-                <h2 class="text-2xl font-bold text-gray-800">
-                    Clientes que deben pagar
-                </h2>
-
-                <p class="mt-1 text-sm text-gray-500">
-                    Clientes con cuotas por cobrar hoy o vencidas
-                </p>
-            </div>
-
-            @if($clientesConDeuda->count() > 0)
-
-                <span class="rounded-full bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700">
-                    {{ $clientesConDeuda->count() }} {{ Str::plural('cliente', $clientesConDeuda->count()) }}
-                </span>
+                <div class="mb-6 flex items-center gap-3 rounded-lg border border-green-300 bg-green-100 px-5 py-4 text-green-700">
+                    <span class="text-lg">✓</span>
+                    {{ session('success') }}
+                </div>
 
             @endif
 
-        </div>
 
-        @if($clientesConDeuda->count() > 0)
+            {{-- VISTA GENERAL --}}
+            <div class="mb-8 flex flex-col gap-4 rounded-xl bg-white p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between">
 
-            <div class="divide-y divide-gray-100">
+                <div class="flex items-center gap-4">
 
-                @foreach($clientesConDeuda as $item)
+                    <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-blue-600 text-2xl text-white">
+                        📊
+                    </div>
 
-                    <div class="flex flex-col gap-4 p-6 transition hover:bg-gray-50 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800">
+                            Vista general
+                        </h1>
 
-                        <div class="flex items-center gap-4">
+                        <p class="text-sm text-gray-500">
+                            Resumen de cobros en tiempo real
+                        </p>
+                    </div>
 
-                            <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 font-bold text-blue-700">
-                                {{ strtoupper(substr($item->cliente->nombre, 0, 1)) }}
+                </div>
+
+                <div class="rounded-lg bg-gray-100 px-4 py-2 text-sm text-gray-600">
+                    Hoy:
+                    <span class="font-semibold text-gray-800">
+                        {{ ucfirst($hoy->locale('es')->isoFormat('dddd, D [de] MMMM')) }}
+                    </span>
+                </div>
+
+            </div>
+
+
+            {{-- TARJETAS RESUMEN --}}
+            <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+
+                <div class="overflow-hidden rounded-xl bg-white shadow-sm transition hover:shadow-md">
+
+                    <div class="p-6">
+
+                        <div class="flex items-start justify-between">
+                            <p class="text-sm text-gray-500">Por cobrar hoy</p>
+
+                            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-lg">
+                                📅
                             </div>
-
-                            <div>
-
-                                <div class="flex flex-wrap items-center gap-2">
-
-                                    <p class="font-semibold text-gray-800">
-                                        {{ $item->cliente->nombre }}
-                                    </p>
-
-                                    @if($item->tiene_vencidas)
-
-                                        <span class="rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
-                                            🔴 Tiene cuotas vencidas
-                                        </span>
-
-                                    @else
-
-                                        <span class="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
-                                            🟢 Vence hoy
-                                        </span>
-
-                                    @endif
-
-                                </div>
-
-                                <p class="mt-1 text-sm text-gray-500">
-                                    {{ $item->cliente->telefono ?: 'Sin teléfono registrado' }}
-                                    &middot;
-                                    {{ $item->cuotas->count() }} {{ Str::plural('cuota', $item->cuotas->count()) }} pendiente(s)
-                                </p>
-
-                            </div>
-
                         </div>
 
-                        <div class="flex items-center gap-4 sm:pl-16">
+                        <p class="mt-3 text-2xl font-bold text-gray-800">
+                            ${{ number_format($totalHoy, 2, ',', '.') }}
+                        </p>
 
-                            <p class="text-xl font-bold text-gray-800">
-                                ${{ number_format($item->total_adeudado, 2, ',', '.') }}
-                            </p>
-
-                            <a
-                                href="{{ route('clientes.show', $item->cliente) }}"
-                                class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700"
-                            >
-                                Ver cliente
-                            </a>
-
-                        </div>
+                        <p class="mt-1 text-sm text-gray-500">
+                            {{ $cobrosHoy->count() }} {{ Str::plural('cuota', $cobrosHoy->count()) }}
+                        </p>
 
                     </div>
 
-                @endforeach
+                    <div class="h-1.5 bg-blue-600"></div>
+
+                </div>
+
+                <div class="overflow-hidden rounded-xl bg-white shadow-sm transition hover:shadow-md">
+
+                    <div class="p-6">
+
+                        <div class="flex items-start justify-between">
+                            <p class="text-sm text-gray-500">Vencido</p>
+
+                            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-red-100 text-lg">
+                                🔴
+                            </div>
+                        </div>
+
+                        <p class="mt-3 text-2xl font-bold text-gray-800">
+                            ${{ number_format($totalVencido, 2, ',', '.') }}
+                        </p>
+
+                        <p class="mt-1 text-sm text-gray-500">
+                            {{ $cobrosVencidos->count() }} {{ Str::plural('cuota', $cobrosVencidos->count()) }}
+                        </p>
+
+                    </div>
+
+                    <div class="h-1.5 bg-red-600"></div>
+
+                </div>
+
+                <div class="overflow-hidden rounded-xl bg-white shadow-sm transition hover:shadow-md">
+
+                    <div class="p-6">
+
+                        <div class="flex items-start justify-between">
+                            <p class="text-sm text-gray-500">Cobrado hoy</p>
+
+                            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-green-100 text-lg">
+                                💵
+                            </div>
+                        </div>
+
+                        <p class="mt-3 text-2xl font-bold text-gray-800">
+                            ${{ number_format($cobradoHoy, 2, ',', '.') }}
+                        </p>
+
+                        <p class="mt-1 text-sm text-gray-500">
+                            Pagos registrados hoy
+                        </p>
+
+                    </div>
+
+                    <div class="h-1.5 bg-green-600"></div>
+
+                </div>
+
+                <div class="overflow-hidden rounded-xl bg-white shadow-sm transition hover:shadow-md">
+
+                    <div class="p-6">
+
+                        <div class="flex items-start justify-between">
+                            <p class="text-sm text-gray-500">Clientes por cobrar</p>
+
+                            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 text-lg">
+                                👤
+                            </div>
+                        </div>
+
+                        <p class="mt-3 text-2xl font-bold text-gray-800">
+                            {{ $clientesConDeuda->count() }}
+                        </p>
+
+                        <p class="mt-1 text-sm text-gray-500">
+                            Con cobros hoy o vencidos
+                        </p>
+
+                    </div>
+
+                    <div class="h-1.5 bg-gray-400"></div>
+
+                </div>
 
             </div>
 
-        @else
 
-            <div class="px-6 py-12 text-center">
-                <div class="text-4xl">🎉</div>
-                <p class="mt-3 text-gray-500">
-                    No hay clientes con cobros pendientes por hoy.
-                </p>
-            </div>
+            {{-- CLIENTES QUE DEBEN PAGAR --}}
+            <div class="mt-8 overflow-hidden rounded-xl bg-white shadow-sm">
 
-        @endif
+                <div class="flex items-center justify-between border-b border-gray-200 p-6">
 
-    </div>
+                    <div>
+                        <h2 class="text-lg font-bold text-gray-800">
+                            Clientes que deben pagar
+                        </h2>
 
+                        <p class="mt-1 text-sm text-gray-500">
+                            Con cuotas por cobrar hoy o vencidas
+                        </p>
+                    </div>
 
-    <div class="mt-8 grid gap-8 lg:grid-cols-2">
+                    @if($clientesConDeuda->count() > 0)
 
-        {{-- COBROS DE HOY --}}
-        <div class="overflow-hidden rounded-xl bg-white shadow-sm">
+                        <span class="rounded-full bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700">
+                            {{ $clientesConDeuda->count() }} {{ Str::plural('cliente', $clientesConDeuda->count()) }}
+                        </span>
 
-            <div class="flex items-center justify-between border-b border-gray-200 p-6">
+                    @endif
 
-                <h2 class="flex items-center gap-2 text-xl font-bold text-gray-800">
-                    <span>📅</span> Cobros de hoy
-                </h2>
+                </div>
 
-                @if($cobrosHoy->count() > 0)
-                    <span class="rounded-full bg-blue-50 px-3 py-1 text-sm font-semibold text-blue-700">
-                        {{ $cobrosHoy->count() }}
-                    </span>
+                @if($clientesConDeuda->count() > 0)
+
+                    <div class="divide-y divide-gray-100">
+
+                        @foreach($clientesConDeuda as $item)
+
+                            <div class="flex flex-col gap-4 p-5 transition hover:bg-gray-50 sm:flex-row sm:items-center sm:justify-between">
+
+                                <div class="flex items-center gap-4">
+
+                                    <div class="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 font-bold text-blue-700">
+                                        {{ strtoupper(substr($item->cliente->nombre, 0, 1)) }}
+                                    </div>
+
+                                    <div>
+
+                                        <div class="flex flex-wrap items-center gap-2">
+
+                                            <p class="font-semibold text-gray-800">
+                                                {{ $item->cliente->nombre }}
+                                            </p>
+
+                                            @if($item->tiene_vencidas)
+
+                                                <span class="rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
+                                                    Vencido
+                                                </span>
+
+                                            @else
+
+                                                <span class="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
+                                                    Vence hoy
+                                                </span>
+
+                                            @endif
+
+                                        </div>
+
+                                        <p class="mt-1 text-sm text-gray-500">
+                                            {{ $item->cliente->telefono ?: 'Sin teléfono registrado' }}
+                                            &middot;
+                                            {{ $item->cuotas->count() }} {{ Str::plural('cuota', $item->cuotas->count()) }} pendiente(s)
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="flex items-center gap-4 sm:pl-16">
+
+                                    <p class="text-lg font-bold text-gray-800">
+                                        ${{ number_format($item->total_adeudado, 2, ',', '.') }}
+                                    </p>
+
+                                    <a
+                                        href="{{ route('clientes.show', $item->cliente) }}"
+                                        class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700"
+                                    >
+                                        Ver cliente
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        @endforeach
+
+                    </div>
+
+                @else
+
+                    <div class="px-6 py-12 text-center">
+                        <div class="text-4xl">🎉</div>
+                        <p class="mt-3 text-gray-500">
+                            No hay clientes con cobros pendientes por hoy.
+                        </p>
+                    </div>
+
                 @endif
 
             </div>
 
-            @if($cobrosHoy->count() > 0)
 
-                <div class="divide-y divide-gray-100">
+            {{-- DOS COLUMNAS: COBROS DE HOY / VENCIDOS --}}
+            <div class="mt-8 grid gap-8 lg:grid-cols-2">
 
-                    @foreach($cobrosHoy as $cuota)
+                {{-- COBROS DE HOY --}}
+                <div class="overflow-hidden rounded-xl bg-white shadow-sm">
 
-                        <div class="flex items-center justify-between gap-3 border-l-4 border-blue-500 p-5 transition hover:bg-gray-50">
+                    <div class="flex items-center justify-between border-b border-gray-200 p-6">
 
-                            <div>
+                        <h2 class="flex items-center gap-2 text-lg font-bold text-gray-800">
+                            <span>📅</span> Cobros de hoy
+                        </h2>
 
-                                <p class="font-semibold text-gray-800">
-                                    {{ $cuota->prestamo->cliente->nombre }}
-                                </p>
+                        @if($cobrosHoy->count() > 0)
+                            <span class="rounded-full bg-blue-50 px-3 py-1 text-sm font-semibold text-blue-700">
+                                {{ $cobrosHoy->count() }}
+                            </span>
+                        @endif
 
-                                <p class="text-sm text-gray-500">
-                                    Préstamo #{{ $cuota->prestamo_id }} &middot; Cuota #{{ $cuota->numero_cuota }}
-                                </p>
+                    </div>
 
-                            </div>
+                    @if($cobrosHoy->count() > 0)
 
-                            <div class="flex flex-shrink-0 items-center gap-3">
+                        <div class="divide-y divide-gray-100">
 
-                                <p class="font-bold text-blue-600">
-                                    ${{ number_format($cuota->saldo_pendiente, 2, ',', '.') }}
-                                </p>
+                            @foreach($cobrosHoy as $cuota)
 
-                                <a
-                                    href="{{ route('cobros.create', $cuota) }}"
-                                    class="rounded-lg bg-green-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-green-700"
-                                >
-                                    Cobrar
-                                </a>
+                                <div class="flex items-center justify-between gap-3 p-5 transition hover:bg-gray-50">
 
-                            </div>
+                                    <div class="flex items-center gap-3">
+
+                                        <span class="h-2.5 w-2.5 flex-shrink-0 rounded-full bg-blue-500"></span>
+
+                                        <div>
+                                            <p class="font-semibold text-gray-800">
+                                                {{ $cuota->prestamo->cliente->nombre }}
+                                            </p>
+
+                                            <p class="text-sm text-gray-500">
+                                                Préstamo #{{ $cuota->prestamo_id }} &middot; Cuota #{{ $cuota->numero_cuota }}
+                                            </p>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="flex flex-shrink-0 items-center gap-3">
+
+                                        <p class="font-bold text-blue-600">
+                                            ${{ number_format($cuota->saldo_pendiente, 2, ',', '.') }}
+                                        </p>
+
+                                        <a
+                                            href="{{ route('cobros.create', $cuota) }}"
+                                            class="rounded-lg bg-green-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-green-700"
+                                        >
+                                            Cobrar
+                                        </a>
+
+                                    </div>
+
+                                </div>
+
+                            @endforeach
 
                         </div>
 
-                    @endforeach
+                    @else
+
+                        <div class="px-6 py-12 text-center">
+                            <div class="text-4xl">📭</div>
+                            <p class="mt-3 text-gray-500">
+                                No hay cuotas programadas para hoy.
+                            </p>
+                        </div>
+
+                    @endif
 
                 </div>
 
-            @else
 
-                <div class="px-6 py-12 text-center">
-                    <div class="text-4xl">📭</div>
-                    <p class="mt-3 text-gray-500">
-                        No hay cuotas programadas para hoy.
-                    </p>
+                {{-- COBROS VENCIDOS --}}
+                <div class="overflow-hidden rounded-xl bg-white shadow-sm">
+
+                    <div class="flex items-center justify-between border-b border-gray-200 p-6">
+
+                        <h2 class="flex items-center gap-2 text-lg font-bold text-gray-800">
+                            <span>🔴</span> Cobros vencidos
+                        </h2>
+
+                        @if($cobrosVencidos->count() > 0)
+                            <span class="rounded-full bg-red-50 px-3 py-1 text-sm font-semibold text-red-700">
+                                {{ $cobrosVencidos->count() }}
+                            </span>
+                        @endif
+
+                    </div>
+
+                    @if($cobrosVencidos->count() > 0)
+
+                        <div class="divide-y divide-gray-100">
+
+                            @foreach($cobrosVencidos as $cuota)
+
+                                @php
+                                    $diasPlazo = (int) ($cuota->prestamo->dias_plazo ?? 0);
+                                    $diasRetraso = $cuota->diasDesdeVencimiento() - $diasPlazo;
+                                @endphp
+
+                                <div class="flex items-center justify-between gap-3 p-5 transition hover:bg-gray-50">
+
+                                    <div class="flex items-center gap-3">
+
+                                        <span class="h-2.5 w-2.5 flex-shrink-0 rounded-full bg-red-500"></span>
+
+                                        <div>
+                                            <p class="font-semibold text-gray-800">
+                                                {{ $cuota->prestamo->cliente->nombre }}
+                                            </p>
+
+                                            <p class="text-sm text-red-600">
+                                                Préstamo #{{ $cuota->prestamo_id }} &middot; Cuota #{{ $cuota->numero_cuota }}
+                                                &middot; {{ $diasRetraso }} {{ Str::plural('día', $diasRetraso) }} de retraso
+                                            </p>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="flex flex-shrink-0 items-center gap-3">
+
+                                        <p class="font-bold text-red-600">
+                                            ${{ number_format($cuota->saldo_pendiente, 2, ',', '.') }}
+                                        </p>
+
+                                        <a
+                                            href="{{ route('cobros.create', $cuota) }}"
+                                            class="rounded-lg bg-green-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-green-700"
+                                        >
+                                            Cobrar
+                                        </a>
+
+                                    </div>
+
+                                </div>
+
+                            @endforeach
+
+                        </div>
+
+                    @else
+
+                        <div class="px-6 py-12 text-center">
+                            <div class="text-4xl">🎉</div>
+                            <p class="mt-3 text-gray-500">
+                                No hay cuotas vencidas.
+                            </p>
+                        </div>
+
+                    @endif
+
                 </div>
-
-            @endif
-
-        </div>
-
-
-        {{-- COBROS VENCIDOS --}}
-        <div class="overflow-hidden rounded-xl bg-white shadow-sm">
-
-            <div class="flex items-center justify-between border-b border-gray-200 p-6">
-
-                <h2 class="flex items-center gap-2 text-xl font-bold text-gray-800">
-                    <span>🔴</span> Cobros vencidos
-                </h2>
-
-                @if($cobrosVencidos->count() > 0)
-                    <span class="rounded-full bg-red-50 px-3 py-1 text-sm font-semibold text-red-700">
-                        {{ $cobrosVencidos->count() }}
-                    </span>
-                @endif
 
             </div>
 
-            @if($cobrosVencidos->count() > 0)
-
-                <div class="divide-y divide-gray-100">
-
-                    @foreach($cobrosVencidos as $cuota)
-
-                        @php
-                            $diasPlazo = (int) ($cuota->prestamo->dias_plazo ?? 0);
-                            $diasRetraso = $cuota->diasDesdeVencimiento() - $diasPlazo;
-                        @endphp
-
-                        <div class="flex items-center justify-between gap-3 border-l-4 border-red-500 bg-red-50/40 p-5 transition hover:bg-red-50">
-
-                            <div>
-
-                                <p class="font-semibold text-gray-800">
-                                    {{ $cuota->prestamo->cliente->nombre }}
-                                </p>
-
-                                <p class="text-sm text-red-600">
-                                    Préstamo #{{ $cuota->prestamo_id }} &middot; Cuota #{{ $cuota->numero_cuota }}
-                                    &middot; {{ $diasRetraso }} {{ Str::plural('día', $diasRetraso) }} de retraso
-                                </p>
-
-                            </div>
-
-                            <div class="flex flex-shrink-0 items-center gap-3">
-
-                                <p class="font-bold text-red-600">
-                                    ${{ number_format($cuota->saldo_pendiente, 2, ',', '.') }}
-                                </p>
-
-                                <a
-                                    href="{{ route('cobros.create', $cuota) }}"
-                                    class="rounded-lg bg-green-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-green-700"
-                                >
-                                    Cobrar
-                                </a>
-
-                            </div>
-
-                        </div>
-
-                    @endforeach
-
-                </div>
-
-            @else
-
-                <div class="px-6 py-12 text-center">
-                    <div class="text-4xl">🎉</div>
-                    <p class="mt-3 text-gray-500">
-                        No hay cuotas vencidas.
-                    </p>
-                </div>
-
-            @endif
-
-        </div>
+        </main>
 
     </div>
 

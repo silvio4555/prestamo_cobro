@@ -6,6 +6,8 @@ use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\PrestamoController;
 use App\Http\Controllers\CobroController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\GastoController;
+use App\Http\Controllers\ContabilidadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -103,3 +105,25 @@ Route::post(
     '/cuotas/{cuota}/pagar',
     [CobroController::class, 'store']
 )->name('cobros.store');
+
+
+/*
+|--------------------------------------------------------------------------
+| Contabilidad (ingresos y egresos)
+|--------------------------------------------------------------------------
+*/
+
+Route::get(
+    '/contabilidad',
+    [ContabilidadController::class, 'index']
+)->name('contabilidad.index');
+
+
+/*
+|--------------------------------------------------------------------------
+| Módulo de Gastos (egresos)
+|--------------------------------------------------------------------------
+*/
+
+Route::resource('gastos', GastoController::class)
+    ->except(['show']);

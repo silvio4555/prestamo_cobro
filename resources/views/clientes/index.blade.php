@@ -12,6 +12,13 @@
 
 <div class="max-w-7xl mx-auto py-10">
 
+    <a href="{{ route('dashboard.index') }}"
+       class="inline-flex items-center gap-2 text-gray-500 hover:text-blue-600 mb-6">
+
+        ← Volver al dashboard
+
+    </a>
+
     <div class="flex justify-between items-center mb-6">
 
         <div>

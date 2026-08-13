@@ -330,6 +330,13 @@
     <div class="mt-8 flex gap-3">
 
         <a
+            href="{{ route('dashboard.index') }}"
+            class="rounded-lg bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-700"
+        >
+            ← Volver al dashboard
+        </a>
+
+        <a
             href="{{ route('clientes.index') }}"
             class="rounded-lg bg-gray-600 px-6 py-3 font-semibold text-white transition hover:bg-gray-700"
         >
