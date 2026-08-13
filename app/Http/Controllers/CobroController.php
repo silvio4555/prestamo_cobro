@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cuota;
 use App\Models\Pago;
 use App\Models\AplicacionPago;
+use App\Models\Prestamo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -244,6 +245,28 @@ class CobroController extends Controller
 
                 'fecha_pago_completo' => $fechaPagoCompleto,
             ]);
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Verificar si el préstamo quedó completamente pagado
+            |--------------------------------------------------------------------------
+            | Si todas las cuotas del préstamo están en estado "pagada", el préstamo
+            | pasa automáticamente a "pagado" (a menos que ya esté cancelado).
+            */
+
+            $totalCuotas = Cuota::where('prestamo_id', $cuota->prestamo_id)->count();
+
+            $cuotasPagadas = Cuota::where('prestamo_id', $cuota->prestamo_id)
+                ->where('estado', 'pagada')
+                ->count();
+
+            if ($totalCuotas > 0 && $totalCuotas === $cuotasPagadas) {
+
+                Prestamo::where('id', $cuota->prestamo_id)
+                    ->whereNotIn('estado', ['cancelado', 'pagado'])
+                    ->update(['estado' => 'pagado']);
+            }
         });
 
 

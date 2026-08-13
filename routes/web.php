@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\PrestamoController;
 use App\Http\Controllers\CobroController;
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,8 +14,20 @@ use App\Http\Controllers\CobroController;
 */
 
 Route::get('/', function () {
-    return redirect()->route('clientes.index');
+    return redirect()->route('dashboard.index');
 });
+
+
+/*
+|--------------------------------------------------------------------------
+| Dashboard de cobros
+|--------------------------------------------------------------------------
+*/
+
+Route::get(
+    '/dashboard',
+    [DashboardController::class, 'index']
+)->name('dashboard.index');
 
 
 /*

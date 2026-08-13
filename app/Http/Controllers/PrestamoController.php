@@ -245,12 +245,33 @@ class PrestamoController extends Controller
     {
         $prestamo->load([
             'cliente',
-            'cuotas'
+            'cuotas.aplicacionesPagos.pago',
         ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | HISTORIAL DE PAGOS COMPLETO
+        |--------------------------------------------------------------------------
+        | Todas las aplicaciones de pago de todas las cuotas del préstamo,
+        | ordenadas de la más reciente a la más antigua.
+        */
+
+        $historialPagos = $prestamo->cuotas
+            ->flatMap(function ($cuota) {
+                return $cuota->aplicacionesPagos->map(function ($aplicacion) use ($cuota) {
+                    $aplicacion->setRelation('cuota', $cuota);
+
+                    return $aplicacion;
+                });
+            })
+            ->sortByDesc(function ($aplicacion) {
+                return optional($aplicacion->pago)->fecha_pago;
+            })
+            ->values();
 
         return view(
             'prestamos.show',
-            compact('prestamo')
+            compact('prestamo', 'historialPagos')
         );
     }
 

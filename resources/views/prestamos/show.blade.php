@@ -341,6 +341,146 @@
     </div>
 
 
+    {{-- HISTORIAL DE PAGOS COMPLETO --}}
+    <div class="mt-8 overflow-hidden rounded-xl bg-white shadow-sm">
+
+        <div class="border-b border-gray-200 p-6">
+
+            <h2 class="text-2xl font-bold text-gray-800">
+                Historial de pagos completo
+            </h2>
+
+            <p class="mt-1 text-sm text-gray-500">
+                Todos los pagos registrados en este préstamo, de la más reciente a la más antigua.
+            </p>
+
+        </div>
+
+        @if($historialPagos->count() > 0)
+
+            <div class="overflow-x-auto">
+
+                <table class="w-full">
+
+                    <thead class="bg-gray-50">
+
+                        <tr>
+
+                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600">
+                                Fecha
+                            </th>
+
+                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600">
+                                Cuota
+                            </th>
+
+                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600">
+                                Capital
+                            </th>
+
+                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600">
+                                Interés
+                            </th>
+
+                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600">
+                                Total
+                            </th>
+
+                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600">
+                                Método
+                            </th>
+
+                            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600">
+                                Observación
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="divide-y divide-gray-200">
+
+                        @foreach($historialPagos as $aplicacion)
+
+                            <tr class="hover:bg-gray-50">
+
+                                <td class="px-6 py-4 text-gray-700">
+                                    {{ $aplicacion->pago?->fecha_pago?->format('d/m/Y') }}
+                                </td>
+
+                                <td class="px-6 py-4 text-gray-700">
+                                    #{{ $aplicacion->cuota->numero_cuota }}
+                                </td>
+
+                                <td class="px-6 py-4 font-medium text-gray-800">
+                                    ${{ number_format($aplicacion->monto_capital ?? 0, 2, ',', '.') }}
+                                </td>
+
+                                <td class="px-6 py-4 font-medium text-gray-800">
+                                    ${{ number_format($aplicacion->monto_interes ?? 0, 2, ',', '.') }}
+                                </td>
+
+                                <td class="px-6 py-4 font-bold text-green-600">
+                                    ${{ number_format(
+                                        ($aplicacion->monto_capital ?? 0) +
+                                        ($aplicacion->monto_interes ?? 0),
+                                        2,
+                                        ',',
+                                        '.'
+                                    ) }}
+                                </td>
+
+                                <td class="px-6 py-4 text-gray-600">
+                                    {{ ucfirst($aplicacion->pago?->metodo_pago ?? 'N/A') }}
+                                </td>
+
+                                <td class="px-6 py-4 text-gray-600">
+                                    {{ $aplicacion->pago?->observaciones ?: '—' }}
+                                </td>
+
+                            </tr>
+
+                        @endforeach
+
+                        <tr class="bg-gray-50 font-bold">
+
+                            <td class="px-6 py-4 text-gray-700" colspan="2">
+                                Total pagado
+                            </td>
+
+                            <td class="px-6 py-4 text-gray-800">
+                                ${{ number_format($historialPagos->sum('monto_capital'), 2, ',', '.') }}
+                            </td>
+
+                            <td class="px-6 py-4 text-gray-800">
+                                ${{ number_format($historialPagos->sum('monto_interes'), 2, ',', '.') }}
+                            </td>
+
+                            <td class="px-6 py-4 text-green-700">
+                                ${{ number_format($historialPagos->sum('monto_capital') + $historialPagos->sum('monto_interes'), 2, ',', '.') }}
+                            </td>
+
+                            <td colspan="2"></td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        @else
+
+            <div class="px-6 py-8 text-center text-gray-500">
+                Todavía no hay pagos registrados en este préstamo.
+            </div>
+
+        @endif
+
+    </div>
+
+
     {{-- CUOTAS --}}
     <div class="mt-8 overflow-hidden rounded-xl bg-white shadow-sm">
 
