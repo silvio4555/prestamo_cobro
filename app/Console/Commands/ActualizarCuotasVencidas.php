@@ -21,9 +21,11 @@ class ActualizarCuotasVencidas extends Command
      */
     public function handle()
     {
-        $hoy = Carbon::today();
+        $hoy = Carbon::today()->startOfDay();
 
-        $cuotas = Cuota::whereIn('estado', [
+        // Cargamos el préstamo de cada cuota para conocer su dias_plazo particular.
+        $cuotas = Cuota::with('prestamo')
+            ->whereIn('estado', [
                 'pendiente',
                 'parcial',
                 'vencida',
@@ -38,12 +40,26 @@ class ActualizarCuotasVencidas extends Command
 
         foreach ($cuotas as $cuota) {
 
+            $diasPlazo = (int) ($cuota->prestamo->dias_plazo ?? 0);
+
             $fechaVencimiento = Carbon::parse(
                 $cuota->fecha_vencimiento
+            )->startOfDay();
+
+            // Días corridos desde el vencimiento (1 = un día después, etc).
+            $diasTranscurridos = (int) floor(
+                ($hoy->timestamp - $fechaVencimiento->timestamp) / 86400
             );
 
 
-            $diasRetraso = $fechaVencimiento->diffInDays($hoy);
+            // Todavía dentro del plazo de gracia ("En plazo") — no se marca vencida.
+            if ($diasTranscurridos <= $diasPlazo) {
+                continue;
+            }
+
+
+            // Ya se agotó el plazo de gracia: el retraso empieza a contar desde aquí.
+            $diasRetraso = $diasTranscurridos - $diasPlazo;
 
 
             $cuota->update([

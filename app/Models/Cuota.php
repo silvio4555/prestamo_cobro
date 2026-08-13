@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Carbon\Carbon;
 
 class Cuota extends Model
 {
@@ -76,6 +77,22 @@ class Cuota extends Model
         return $this->hasMany(
             AplicacionPago::class,
             'cuota_id'
+        );
+    }
+
+
+    /**
+     * Días transcurridos desde la fecha de vencimiento hasta hoy.
+     * 0 = vence hoy. Negativo = todavía no vence. Positivo = ya pasó la fecha.
+     */
+    public function diasDesdeVencimiento(): int
+    {
+        $hoy = Carbon::today()->startOfDay();
+
+        $vencimiento = Carbon::parse($this->fecha_vencimiento)->startOfDay();
+
+        return (int) floor(
+            ($hoy->timestamp - $vencimiento->timestamp) / 86400
         );
     }
 }

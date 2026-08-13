@@ -290,6 +290,38 @@
 
 
 
+            {{-- DÍAS DE PLAZO --}}
+
+            <div>
+
+                <label
+                    for="dias_plazo"
+                    class="mb-2 block font-semibold text-gray-700"
+                >
+                    Plazo de pago (días de gracia)
+                </label>
+
+                <input
+                    type="number"
+                    name="dias_plazo"
+                    id="dias_plazo"
+                    min="0"
+                    max="60"
+                    step="1"
+                    value="{{ old('dias_plazo', 3) }}"
+                    required
+                    class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                    placeholder="Ej: 3"
+                >
+
+                <p class="mt-1 text-sm text-gray-500">
+                    Días después del vencimiento antes de marcar la cuota como vencida.
+                </p>
+
+            </div>
+
+
+
             {{-- OBSERVACIONES --}}
 
             <div class="md:col-span-2">

@@ -256,6 +256,91 @@
     </div>
 
 
+    {{-- RESUMEN FINANCIERO --}}
+    <div class="mt-8 overflow-hidden rounded-xl bg-white shadow-sm">
+
+        <div class="border-b border-gray-200 p-6">
+
+            <h2 class="text-2xl font-bold text-gray-800">
+                Resumen financiero
+            </h2>
+
+        </div>
+
+        <div class="grid gap-6 p-6 md:grid-cols-3">
+
+            <div class="rounded-lg bg-gray-50 p-5">
+                <p class="text-sm text-gray-500">Total de intereses</p>
+                <p class="mt-2 text-xl font-bold text-gray-800">
+                    ${{ number_format($prestamo->total_interes, 2, ',', '.') }}
+                </p>
+            </div>
+
+            <div class="rounded-lg bg-green-50 p-5">
+                <p class="text-sm text-green-600">Total abonado</p>
+                <p class="mt-2 text-xl font-bold text-green-700">
+                    ${{ number_format($prestamo->total_abonado, 2, ',', '.') }}
+                </p>
+            </div>
+
+            <div class="rounded-lg bg-orange-50 p-5">
+                <p class="text-sm text-orange-600">Saldo pendiente</p>
+                <p class="mt-2 text-xl font-bold text-orange-700">
+                    ${{ number_format($prestamo->saldo_pendiente, 2, ',', '.') }}
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    {{-- RESUMEN DE CUOTAS --}}
+    <div class="mt-8 overflow-hidden rounded-xl bg-white shadow-sm">
+
+        <div class="border-b border-gray-200 p-6">
+
+            <h2 class="text-2xl font-bold text-gray-800">
+                Resumen de cuotas
+            </h2>
+
+        </div>
+
+        <div class="grid gap-6 p-6 md:grid-cols-4">
+
+            <div class="rounded-lg bg-green-50 p-5 text-center">
+                <p class="text-sm text-green-600">Pagadas</p>
+                <p class="mt-2 text-3xl font-bold text-green-700">
+                    {{ $prestamo->cuotas_pagadas }}
+                </p>
+            </div>
+
+            <div class="rounded-lg bg-yellow-50 p-5 text-center">
+                <p class="text-sm text-yellow-600">Parciales</p>
+                <p class="mt-2 text-3xl font-bold text-yellow-700">
+                    {{ $prestamo->cuotas_parciales }}
+                </p>
+            </div>
+
+            <div class="rounded-lg bg-gray-50 p-5 text-center">
+                <p class="text-sm text-gray-500">Pendientes</p>
+                <p class="mt-2 text-3xl font-bold text-gray-700">
+                    {{ $prestamo->cuotas_pendientes }}
+                </p>
+            </div>
+
+            <div class="rounded-lg bg-red-50 p-5 text-center">
+                <p class="text-sm text-red-600">Vencidas</p>
+                <p class="mt-2 text-3xl font-bold text-red-700">
+                    {{ $prestamo->cuotas_vencidas }}
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+
     {{-- CUOTAS --}}
     <div class="mt-8 overflow-hidden rounded-xl bg-white shadow-sm">
 
@@ -322,19 +407,16 @@
                             {{-- ESTADO --}}
                             <div>
 
-                                @if($cuota->estado === 'pendiente')
+                                @php
+                                    // Solo calculamos en vivo para cuotas todavía abiertas.
+                                    $diasDesdeVencimiento = in_array($cuota->estado, ['pendiente', 'parcial'])
+                                        ? $cuota->diasDesdeVencimiento()
+                                        : null;
 
-                                    <span class="rounded-full bg-yellow-100 px-4 py-2 text-sm font-semibold text-yellow-700">
-                                        Pendiente
-                                    </span>
+                                    $diasPlazo = (int) $prestamo->dias_plazo;
+                                @endphp
 
-                                @elseif($cuota->estado === 'parcial')
-
-                                    <span class="rounded-full bg-orange-100 px-4 py-2 text-sm font-semibold text-orange-700">
-                                        Pago parcial
-                                    </span>
-
-                                @elseif($cuota->estado === 'pagada')
+                                @if($cuota->estado === 'pagada')
 
                                     <span class="rounded-full bg-green-100 px-4 py-2 text-sm font-semibold text-green-700">
                                         Pagada
@@ -343,13 +425,42 @@
                                 @elseif($cuota->estado === 'vencida')
 
                                     <span class="rounded-full bg-red-100 px-4 py-2 text-sm font-semibold text-red-700">
-                                        Vencida
+                                        🔴 Vencida
+                                        @if($cuota->dias_retraso > 0)
+                                            — {{ $cuota->dias_retraso }} {{ Str::plural('día', $cuota->dias_retraso) }} de retraso
+                                        @endif
+                                    </span>
+
+                                @elseif($diasDesdeVencimiento !== null && $diasDesdeVencimiento > $diasPlazo)
+
+                                    {{-- Ya pasó el plazo de gracia pero el comando todavía no la marcó vencida --}}
+                                    <span class="rounded-full bg-red-100 px-4 py-2 text-sm font-semibold text-red-700">
+                                        🔴 Vencida
+                                        — {{ $diasDesdeVencimiento - $diasPlazo }} {{ Str::plural('día', $diasDesdeVencimiento - $diasPlazo) }} de retraso
+                                    </span>
+
+                                @elseif($diasDesdeVencimiento !== null && $diasDesdeVencimiento >= 1)
+
+                                    <span class="rounded-full bg-green-100 px-4 py-2 text-sm font-semibold text-green-700">
+                                        🟢 En plazo — {{ $diasDesdeVencimiento }} {{ Str::plural('día', $diasDesdeVencimiento) }}
+                                    </span>
+
+                                @elseif($diasDesdeVencimiento === 0)
+
+                                    <span class="rounded-full bg-green-100 px-4 py-2 text-sm font-semibold text-green-700">
+                                        🟢 Vence hoy
+                                    </span>
+
+                                @elseif($cuota->estado === 'parcial')
+
+                                    <span class="rounded-full bg-orange-100 px-4 py-2 text-sm font-semibold text-orange-700">
+                                        Pago parcial
                                     </span>
 
                                 @else
 
-                                    <span class="rounded-full bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-700">
-                                        {{ ucfirst($cuota->estado) }}
+                                    <span class="rounded-full bg-yellow-100 px-4 py-2 text-sm font-semibold text-yellow-700">
+                                        Pendiente
                                     </span>
 
                                 @endif

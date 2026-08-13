@@ -12,7 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('prestamos', function (Blueprint $table) {
-            //
+            $table->unsignedInteger('dias_plazo')
+                ->default(3)
+                ->after('fecha_primer_pago');
         });
     }
 
@@ -22,7 +24,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('prestamos', function (Blueprint $table) {
-            //
+            $table->dropColumn('dias_plazo');
         });
     }
 };

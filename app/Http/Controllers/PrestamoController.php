@@ -31,6 +31,7 @@ class PrestamoController extends Controller
             'numero_cuotas' => 'required|integer|min:1',
             'fecha_prestamo' => 'required|date',
             'fecha_primer_pago' => 'required|date',
+            'dias_plazo' => 'required|integer|min:0|max:60',
             'observaciones' => 'nullable|string|max:1000',
         ]);
 
@@ -104,6 +105,8 @@ class PrestamoController extends Controller
                 'fecha_prestamo' => $datos['fecha_prestamo'],
 
                 'fecha_primer_pago' => $datos['fecha_primer_pago'],
+
+                'dias_plazo' => $datos['dias_plazo'],
 
                 'estado' => 'activo',
 

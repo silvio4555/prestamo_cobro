@@ -20,6 +20,7 @@ class Prestamo extends Model
         'valor_cuota',
         'fecha_prestamo',
         'fecha_primer_pago',
+        'dias_plazo',
         'estado',
         'observaciones',
     ];
@@ -31,6 +32,7 @@ class Prestamo extends Model
         'valor_cuota' => 'decimal:2',
         'fecha_prestamo' => 'date',
         'fecha_primer_pago' => 'date',
+        'dias_plazo' => 'integer',
     ];
 
     public function cliente(): BelongsTo
@@ -41,5 +43,67 @@ class Prestamo extends Model
     public function cuotas(): HasMany
     {
         return $this->hasMany(Cuota::class, 'prestamo_id');
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | RESUMEN FINANCIERO
+    |--------------------------------------------------------------------------
+    | Requieren que la relación 'cuotas' venga cargada (eager load) para no
+    | disparar consultas repetidas.
+    */
+
+    public function getTotalInteresAttribute()
+    {
+        return round(
+            (float) $this->total_pagar - (float) $this->monto_prestado,
+            2
+        );
+    }
+
+    public function getTotalAbonadoAttribute()
+    {
+        return round(
+            $this->cuotas->sum(fn ($cuota) => (float) $cuota->valor_pagado),
+            2
+        );
+    }
+
+    public function getSaldoPendienteAttribute()
+    {
+        return round(
+            $this->cuotas->sum(fn ($cuota) => (float) $cuota->saldo_pendiente),
+            2
+        );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | RESUMEN DE CUOTAS
+    |--------------------------------------------------------------------------
+    */
+
+    public function getCuotasPagadasAttribute()
+    {
+        return $this->cuotas
+            ->whereIn('estado', ['pagada', 'pagada_con_retraso'])
+            ->count();
+    }
+
+    public function getCuotasParcialesAttribute()
+    {
+        return $this->cuotas->where('estado', 'parcial')->count();
+    }
+
+    public function getCuotasPendientesAttribute()
+    {
+        return $this->cuotas->where('estado', 'pendiente')->count();
+    }
+
+    public function getCuotasVencidasAttribute()
+    {
+        return $this->cuotas->where('estado', 'vencida')->count();
     }
 }
