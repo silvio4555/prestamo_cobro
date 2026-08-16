@@ -204,7 +204,7 @@
 
                                 ${{ number_format(
                                     (float) $prestamo->monto_prestado,
-                                    2,
+                                    0,
                                     ',',
                                     '.'
                                 ) }}
@@ -230,7 +230,7 @@
 
                                 ${{ number_format(
                                     (float) $prestamo->total_pagar,
-                                    2,
+                                    0,
                                     ',',
                                     '.'
                                 ) }}

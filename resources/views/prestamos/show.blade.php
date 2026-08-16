@@ -134,7 +134,7 @@
                 </p>
 
                 <p class="mt-2 text-2xl font-bold text-gray-800">
-                    ${{ number_format($prestamo->monto_prestado, 2, ',', '.') }}
+                    ${{ number_format($prestamo->monto_prestado, 0, ',', '.') }}
                 </p>
 
             </div>
@@ -162,7 +162,7 @@
                 </p>
 
                 <p class="mt-2 text-2xl font-bold text-green-600">
-                    ${{ number_format($prestamo->total_pagar, 2, ',', '.') }}
+                    ${{ number_format($prestamo->total_pagar, 0, ',', '.') }}
                 </p>
 
             </div>
@@ -204,7 +204,7 @@
                 </p>
 
                 <p class="mt-2 text-lg font-bold text-blue-600">
-                    ${{ number_format($prestamo->valor_cuota, 2, ',', '.') }}
+                    ${{ number_format($prestamo->valor_cuota, 0, ',', '.') }}
                 </p>
 
             </div>
@@ -272,21 +272,21 @@
             <div class="rounded-lg bg-gray-50 p-5">
                 <p class="text-sm text-gray-500">Total de intereses</p>
                 <p class="mt-2 text-xl font-bold text-gray-800">
-                    ${{ number_format($prestamo->total_interes, 2, ',', '.') }}
+                    ${{ number_format($prestamo->total_interes, 0, ',', '.') }}
                 </p>
             </div>
 
             <div class="rounded-lg bg-green-50 p-5">
                 <p class="text-sm text-green-600">Total abonado</p>
                 <p class="mt-2 text-xl font-bold text-green-700">
-                    ${{ number_format($prestamo->total_abonado, 2, ',', '.') }}
+                    ${{ number_format($prestamo->total_abonado, 0, ',', '.') }}
                 </p>
             </div>
 
             <div class="rounded-lg bg-orange-50 p-5">
                 <p class="text-sm text-orange-600">Saldo pendiente</p>
                 <p class="mt-2 text-xl font-bold text-orange-700">
-                    ${{ number_format($prestamo->saldo_pendiente, 2, ',', '.') }}
+                    ${{ number_format($prestamo->saldo_pendiente, 0, ',', '.') }}
                 </p>
             </div>
 
@@ -413,18 +413,18 @@
                                 </td>
 
                                 <td class="px-6 py-4 font-medium text-gray-800">
-                                    ${{ number_format($aplicacion->monto_capital ?? 0, 2, ',', '.') }}
+                                    ${{ number_format($aplicacion->monto_capital ?? 0, 0, ',', '.') }}
                                 </td>
 
                                 <td class="px-6 py-4 font-medium text-gray-800">
-                                    ${{ number_format($aplicacion->monto_interes ?? 0, 2, ',', '.') }}
+                                    ${{ number_format($aplicacion->monto_interes ?? 0, 0, ',', '.') }}
                                 </td>
 
                                 <td class="px-6 py-4 font-bold text-green-600">
                                     ${{ number_format(
                                         ($aplicacion->monto_capital ?? 0) +
                                         ($aplicacion->monto_interes ?? 0),
-                                        2,
+                                        0,
                                         ',',
                                         '.'
                                     ) }}
@@ -449,15 +449,15 @@
                             </td>
 
                             <td class="px-6 py-4 text-gray-800">
-                                ${{ number_format($historialPagos->sum('monto_capital'), 2, ',', '.') }}
+                                ${{ number_format($historialPagos->sum('monto_capital'), 0, ',', '.') }}
                             </td>
 
                             <td class="px-6 py-4 text-gray-800">
-                                ${{ number_format($historialPagos->sum('monto_interes'), 2, ',', '.') }}
+                                ${{ number_format($historialPagos->sum('monto_interes'), 0, ',', '.') }}
                             </td>
 
                             <td class="px-6 py-4 text-green-700">
-                                ${{ number_format($historialPagos->sum('monto_capital') + $historialPagos->sum('monto_interes'), 2, ',', '.') }}
+                                ${{ number_format($historialPagos->sum('monto_capital') + $historialPagos->sum('monto_interes'), 0, ',', '.') }}
                             </td>
 
                             <td colspan="2"></td>
@@ -623,7 +623,7 @@
                             </p>
 
                             <p class="mt-1 text-xl font-bold text-blue-700">
-                                ${{ number_format($cuota->valor_programado, 2, ',', '.') }}
+                                ${{ number_format($cuota->valor_programado, 0, ',', '.') }}
                             </p>
 
                         </div>
@@ -637,7 +637,7 @@
                             </p>
 
                             <p class="mt-1 text-xl font-bold text-gray-800">
-                                ${{ number_format($cuota->saldo_capital, 2, ',', '.') }}
+                                ${{ number_format($cuota->saldo_capital, 0, ',', '.') }}
                             </p>
 
                         </div>
@@ -651,7 +651,7 @@
                             </p>
 
                             <p class="mt-1 text-xl font-bold text-gray-800">
-                                ${{ number_format($cuota->saldo_interes, 2, ',', '.') }}
+                                ${{ number_format($cuota->saldo_interes, 0, ',', '.') }}
                             </p>
 
                         </div>
@@ -665,7 +665,7 @@
                             </p>
 
                             <p class="mt-1 text-xl font-bold text-orange-700">
-                                ${{ number_format($cuota->saldo_pendiente, 2, ',', '.') }}
+                                ${{ number_format($cuota->saldo_pendiente, 0, ',', '.') }}
                             </p>
 
                         </div>
@@ -743,14 +743,14 @@
 
                                                 <td class="px-6 py-4 font-medium text-gray-800">
 
-                                                    ${{ number_format($aplicacion->monto_capital ?? 0, 2, ',', '.') }}
+                                                    ${{ number_format($aplicacion->monto_capital ?? 0, 0, ',', '.') }}
 
                                                 </td>
 
 
                                                 <td class="px-6 py-4 font-medium text-gray-800">
 
-                                                    ${{ number_format($aplicacion->monto_interes ?? 0, 2, ',', '.') }}
+                                                    ${{ number_format($aplicacion->monto_interes ?? 0, 0, ',', '.') }}
 
                                                 </td>
 
@@ -760,7 +760,7 @@
                                                     ${{ number_format(
                                                         ($aplicacion->monto_capital ?? 0) +
                                                         ($aplicacion->monto_interes ?? 0),
-                                                        2,
+                                                        0,
                                                         ',',
                                                         '.'
                                                     ) }}

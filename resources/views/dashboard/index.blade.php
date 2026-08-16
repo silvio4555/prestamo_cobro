@@ -66,11 +66,11 @@
             </a>
 
             <a
-                href="#"
+                href="{{ route('estadisticas.index') }}"
                 class="flex items-center gap-3 rounded-lg px-4 py-3 text-slate-300 transition hover:bg-slate-800 hover:text-white"
             >
                 <span>📊</span>
-                <span>Reportes</span>
+                <span>Estadísticas</span>
             </a>
 
         </nav>
@@ -181,7 +181,7 @@
                         </div>
 
                         <p class="mt-3 text-2xl font-bold text-gray-800">
-                            ${{ number_format($totalHoy, 2, ',', '.') }}
+                            ${{ number_format($totalHoy, 0, ',', '.') }}
                         </p>
 
                         <p class="mt-1 text-sm text-gray-500">
@@ -207,7 +207,7 @@
                         </div>
 
                         <p class="mt-3 text-2xl font-bold text-gray-800">
-                            ${{ number_format($totalVencido, 2, ',', '.') }}
+                            ${{ number_format($totalVencido, 0, ',', '.') }}
                         </p>
 
                         <p class="mt-1 text-sm text-gray-500">
@@ -233,7 +233,7 @@
                         </div>
 
                         <p class="mt-3 text-2xl font-bold text-gray-800">
-                            ${{ number_format($cobradoHoy, 2, ',', '.') }}
+                            ${{ number_format($cobradoHoy, 0, ',', '.') }}
                         </p>
 
                         <p class="mt-1 text-sm text-gray-500">
@@ -351,7 +351,7 @@
                                 <div class="flex items-center gap-4 sm:pl-16">
 
                                     <p class="text-lg font-bold text-gray-800">
-                                        ${{ number_format($item->total_adeudado, 2, ',', '.') }}
+                                        ${{ number_format($item->total_adeudado, 0, ',', '.') }}
                                     </p>
 
                                     <a
@@ -430,7 +430,7 @@
                                     <div class="flex flex-shrink-0 items-center gap-3">
 
                                         <p class="font-bold text-blue-600">
-                                            ${{ number_format($cuota->saldo_pendiente, 2, ',', '.') }}
+                                            ${{ number_format($cuota->saldo_pendiente, 0, ',', '.') }}
                                         </p>
 
                                         <a
@@ -512,7 +512,7 @@
                                     <div class="flex flex-shrink-0 items-center gap-3">
 
                                         <p class="font-bold text-red-600">
-                                            ${{ number_format($cuota->saldo_pendiente, 2, ',', '.') }}
+                                            ${{ number_format($cuota->saldo_pendiente, 0, ',', '.') }}
                                         </p>
 
                                         <a

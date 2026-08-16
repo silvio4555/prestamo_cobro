@@ -165,24 +165,47 @@
 
 
             {{-- GANANCIA LIBRE MENSUAL --}}
-            <div class="mb-8 overflow-hidden rounded-xl bg-white shadow-sm">
+            <div class="mb-4 overflow-hidden rounded-xl bg-white shadow-sm">
 
                 <div class="flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between">
 
                     <div>
                         <p class="text-sm text-gray-500">Ganancia libre mensual</p>
                         <p class="mt-1 text-sm text-gray-400">
-                            Cobrado del mes − gastado del mes
+                            Cobrado del mes − gastado del mes (incluye capital devuelto)
                         </p>
                     </div>
 
                     <p class="text-4xl font-bold {{ $gananciaLibreMes >= 0 ? 'text-green-600' : 'text-red-600' }}">
-                        ${{ number_format($gananciaLibreMes, 2, ',', '.') }}
+                        ${{ number_format($gananciaLibreMes, 0, ',', '.') }}
                     </p>
 
                 </div>
 
                 <div class="h-1.5 {{ $gananciaLibreMes >= 0 ? 'bg-green-600' : 'bg-red-600' }}"></div>
+
+            </div>
+
+
+            {{-- GANANCIA NETA (REAL, SOLO INTERÉS) --}}
+            <div class="mb-8 overflow-hidden rounded-xl bg-white shadow-sm">
+
+                <div class="flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between">
+
+                    <div>
+                        <p class="text-sm text-gray-500">Ganancia neta (real)</p>
+                        <p class="mt-1 text-sm text-gray-400">
+                            Interés cobrado del mes − gastado del mes
+                        </p>
+                    </div>
+
+                    <p class="text-4xl font-bold {{ $gananciaNetaMes >= 0 ? 'text-emerald-600' : 'text-red-600' }}">
+                        ${{ number_format($gananciaNetaMes, 0, ',', '.') }}
+                    </p>
+
+                </div>
+
+                <div class="h-1.5 {{ $gananciaNetaMes >= 0 ? 'bg-emerald-600' : 'bg-red-600' }}"></div>
 
             </div>
 
@@ -193,7 +216,7 @@
                 Ingresos
             </h2>
 
-            <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
 
                 <div class="overflow-hidden rounded-xl bg-white shadow-sm transition hover:shadow-md">
 
@@ -208,12 +231,64 @@
                         </div>
 
                         <p class="mt-3 text-2xl font-bold text-gray-800">
-                            ${{ number_format($cobradoSemana, 2, ',', '.') }}
+                            ${{ number_format($cobradoSemana, 0, ',', '.') }}
                         </p>
 
                     </div>
 
                     <div class="h-1.5 bg-green-600"></div>
+
+                </div>
+
+                <div class="overflow-hidden rounded-xl bg-white shadow-sm transition hover:shadow-md">
+
+                    <div class="p-6">
+
+                        <div class="flex items-start justify-between">
+                            <p class="text-sm text-gray-500">Interés cobrado (semana)</p>
+
+                            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 text-lg">
+                                📈
+                            </div>
+                        </div>
+
+                        <p class="mt-3 text-2xl font-bold text-emerald-600">
+                            ${{ number_format($interesCobradoSemana, 0, ',', '.') }}
+                        </p>
+
+                        <p class="mt-1 text-xs text-gray-400">
+                            Esto sí es ganancia
+                        </p>
+
+                    </div>
+
+                    <div class="h-1.5 bg-emerald-600"></div>
+
+                </div>
+
+                <div class="overflow-hidden rounded-xl bg-white shadow-sm transition hover:shadow-md">
+
+                    <div class="p-6">
+
+                        <div class="flex items-start justify-between">
+                            <p class="text-sm text-gray-500">Interés cobrado (mes)</p>
+
+                            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 text-lg">
+                                📈
+                            </div>
+                        </div>
+
+                        <p class="mt-3 text-2xl font-bold text-emerald-600">
+                            ${{ number_format($interesCobradoMes, 0, ',', '.') }}
+                        </p>
+
+                        <p class="mt-1 text-xs text-gray-400">
+                            Esto sí es ganancia
+                        </p>
+
+                    </div>
+
+                    <div class="h-1.5 bg-emerald-600"></div>
 
                 </div>
 
@@ -230,7 +305,7 @@
                         </div>
 
                         <p class="mt-3 text-2xl font-bold text-gray-800">
-                            ${{ number_format($cobradoMes, 2, ',', '.') }}
+                            ${{ number_format($cobradoMes, 0, ',', '.') }}
                         </p>
 
                     </div>
@@ -252,7 +327,7 @@
                         </div>
 
                         <p class="mt-3 text-2xl font-bold text-gray-800">
-                            ${{ number_format($prestadoSemana, 2, ',', '.') }}
+                            ${{ number_format($prestadoSemana, 0, ',', '.') }}
                         </p>
 
                     </div>
@@ -274,7 +349,7 @@
                         </div>
 
                         <p class="mt-3 text-2xl font-bold text-gray-800">
-                            ${{ number_format($prestadoMes, 2, ',', '.') }}
+                            ${{ number_format($prestadoMes, 0, ',', '.') }}
                         </p>
 
                     </div>
@@ -307,7 +382,7 @@
                         </div>
 
                         <p class="mt-3 text-2xl font-bold text-gray-800">
-                            ${{ number_format($gastadoMes, 2, ',', '.') }}
+                            ${{ number_format($gastadoMes, 0, ',', '.') }}
                         </p>
 
                     </div>
@@ -329,7 +404,7 @@
                         </div>
 
                         <p class="mt-3 text-2xl font-bold text-gray-800">
-                            ${{ number_format($trabajadorMes, 2, ',', '.') }}
+                            ${{ number_format($trabajadorMes, 0, ',', '.') }}
                         </p>
 
                     </div>
@@ -351,7 +426,7 @@
                         </div>
 
                         <p class="mt-3 text-2xl font-bold text-gray-800">
-                            ${{ number_format($gasolinaMes, 2, ',', '.') }}
+                            ${{ number_format($gasolinaMes, 0, ',', '.') }}
                         </p>
 
                     </div>
@@ -373,7 +448,7 @@
                         </div>
 
                         <p class="mt-3 text-2xl font-bold text-gray-800">
-                            ${{ number_format($otrosGastosMes, 2, ',', '.') }}
+                            ${{ number_format($otrosGastosMes, 0, ',', '.') }}
                         </p>
 
                     </div>
@@ -442,7 +517,7 @@
                                 </div>
 
                                 <p class="font-bold text-red-600">
-                                    ${{ number_format($gasto->monto, 2, ',', '.') }}
+                                    ${{ number_format($gasto->monto, 0, ',', '.') }}
                                 </p>
 
                             </div>

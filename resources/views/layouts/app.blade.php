@@ -1,5 +1,3 @@
-@extends('layouts.app')
-@section('content') 
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -117,17 +115,17 @@
                 </a>
 
 
-                <!-- Reportes -->
+                <!-- Estadísticas -->
 
                 <a
-                    href="#"
+                    href="{{ route('estadisticas.index') }}"
                     class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-800 transition"
                 >
 
                     <span>📊</span>
 
                     <span>
-                        Reportes
+                        Estadísticas
                     </span>
 
                 </a>

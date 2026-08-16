@@ -8,6 +8,7 @@ use App\Http\Controllers\CobroController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GastoController;
 use App\Http\Controllers\ContabilidadController;
+use App\Http\Controllers\EstadisticasController;
 
 /*
 |--------------------------------------------------------------------------
@@ -127,3 +128,20 @@ Route::get(
 
 Route::resource('gastos', GastoController::class)
     ->except(['show']);
+
+
+/*
+|--------------------------------------------------------------------------
+| Módulo de Estadísticas
+|--------------------------------------------------------------------------
+*/
+
+Route::get(
+    '/estadisticas',
+    [EstadisticasController::class, 'index']
+)->name('estadisticas.index');
+
+Route::get(
+    '/estadisticas/data',
+    [EstadisticasController::class, 'data']
+)->name('estadisticas.data');
