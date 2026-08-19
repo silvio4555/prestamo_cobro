@@ -21,6 +21,8 @@ class Prestamo extends Model
         'fecha_prestamo',
         'fecha_primer_pago',
         'dias_plazo',
+        'aplica_interes_mora',
+        'porcentaje_interes_mora',
         'estado',
         'observaciones',
     ];
@@ -33,6 +35,8 @@ class Prestamo extends Model
         'fecha_prestamo' => 'date',
         'fecha_primer_pago' => 'date',
         'dias_plazo' => 'integer',
+        'aplica_interes_mora' => 'boolean',
+        'porcentaje_interes_mora' => 'decimal:2',
     ];
 
     public function cliente(): BelongsTo

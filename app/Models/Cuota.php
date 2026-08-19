@@ -34,6 +34,8 @@ class Cuota extends Model
         'estado',
         'fecha_pago_completo',
         'dias_retraso',
+        'interes_mora',
+        'mora_aplicada',
     ];
 
     protected $casts = [
@@ -56,6 +58,8 @@ class Cuota extends Model
         'fecha_pago_completo' => 'date',
 
         'dias_retraso' => 'integer',
+        'interes_mora' => 'decimal:2',
+        'mora_aplicada' => 'boolean',
     ];
 
     /**

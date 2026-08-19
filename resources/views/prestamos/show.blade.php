@@ -168,6 +168,34 @@
             </div>
 
 
+            {{-- INTERÉS POR MORA --}}
+            <div class="rounded-lg bg-gray-50 p-5">
+
+                <p class="text-sm text-gray-500">
+                    Interés por mora
+                </p>
+
+                @if($prestamo->aplica_interes_mora)
+
+                    <p class="mt-2 text-2xl font-bold text-amber-600">
+                        {{ number_format($prestamo->porcentaje_interes_mora, 2, ',', '.') }}%
+                    </p>
+
+                    <p class="mt-1 text-xs text-gray-400">
+                        Se suma al vencerse una cuota
+                    </p>
+
+                @else
+
+                    <p class="mt-2 text-2xl font-bold text-gray-400">
+                        No aplica
+                    </p>
+
+                @endif
+
+            </div>
+
+
             {{-- FRECUENCIA --}}
             <div class="rounded-lg bg-gray-50 p-5">
 

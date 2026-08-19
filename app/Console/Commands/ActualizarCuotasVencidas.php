@@ -62,10 +62,50 @@ class ActualizarCuotasVencidas extends Command
             $diasRetraso = $diasTranscurridos - $diasPlazo;
 
 
-            $cuota->update([
+            $datosActualizar = [
                 'estado' => 'vencida',
                 'dias_retraso' => $diasRetraso,
-            ]);
+            ];
+
+
+            // Si el préstamo tiene activado el interés por mora y todavía no
+            // se le ha aplicado a esta cuota, se suma una sola vez.
+            if (
+                $cuota->prestamo->aplica_interes_mora
+                && ! $cuota->mora_aplicada
+                && (float) $cuota->prestamo->porcentaje_interes_mora > 0
+            ) {
+                $porcentaje = (float) $cuota->prestamo->porcentaje_interes_mora;
+
+                $interesMora = round(
+                    (float) $cuota->saldo_pendiente * ($porcentaje / 100),
+                    2
+                );
+
+                $datosActualizar['interes_mora'] = $interesMora;
+                $datosActualizar['mora_aplicada'] = true;
+
+                $datosActualizar['interes_programado'] = round(
+                    (float) $cuota->interes_programado + $interesMora,
+                    2
+                );
+                $datosActualizar['saldo_interes'] = round(
+                    (float) $cuota->saldo_interes + $interesMora,
+                    2
+                );
+
+                $datosActualizar['valor_programado'] = round(
+                    (float) $cuota->valor_programado + $interesMora,
+                    2
+                );
+                $datosActualizar['saldo_pendiente'] = round(
+                    (float) $cuota->saldo_pendiente + $interesMora,
+                    2
+                );
+            }
+
+
+            $cuota->update($datosActualizar);
 
 
             $actualizadas++;

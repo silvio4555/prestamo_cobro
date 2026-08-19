@@ -322,6 +322,63 @@
 
 
 
+            {{-- INTERÉS POR MORA --}}
+
+            <div class="md:col-span-2 rounded-lg border border-gray-200 p-5">
+
+                <label class="flex items-center gap-3">
+
+                    <input
+                        type="checkbox"
+                        name="aplica_interes_mora"
+                        id="aplica_interes_mora"
+                        value="1"
+                        {{ old('aplica_interes_mora') ? 'checked' : '' }}
+                        class="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                        onchange="document.getElementById('campo-porcentaje-mora').classList.toggle('hidden', !this.checked)"
+                    >
+
+                    <span class="font-semibold text-gray-700">
+                        Subir el interés automáticamente cuando una cuota se venza
+                    </span>
+
+                </label>
+
+                <p class="mt-1 ml-8 text-sm text-gray-500">
+                    Si lo activas, cuando una cuota pase su plazo de gracia sin pagarse,
+                    se le suma un porcentaje extra de interés una sola vez.
+                </p>
+
+                <div
+                    id="campo-porcentaje-mora"
+                    class="{{ old('aplica_interes_mora') ? '' : 'hidden' }} mt-4 ml-8 max-w-xs"
+                >
+
+                    <label
+                        for="porcentaje_interes_mora"
+                        class="mb-2 block text-sm font-semibold text-gray-700"
+                    >
+                        Porcentaje de mora (%)
+                    </label>
+
+                    <input
+                        type="number"
+                        name="porcentaje_interes_mora"
+                        id="porcentaje_interes_mora"
+                        min="0.01"
+                        max="100"
+                        step="0.01"
+                        value="{{ old('porcentaje_interes_mora') }}"
+                        class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                        placeholder="Ej: 5"
+                    >
+
+                </div>
+
+            </div>
+
+
+
             {{-- OBSERVACIONES --}}
 
             <div class="md:col-span-2">
@@ -534,9 +591,21 @@ document.addEventListener('DOMContentLoaded', function () {
             frecuenciaInput.value;
 
 
+        // La tasa que se ingresa es MENSUAL. Si la frecuencia es semanal o
+        // quincenal, hay que prorratearla (dividirla) — igual que hace el
+        // backend — para no cobrar la tasa mensual completa en cada cuota.
+
+        const divisorFrecuencia =
+            frecuencia === 'semanal' ? 4 :
+            frecuencia === 'quincenal' ? 2 :
+            1;
+
+        const tasaPorPeriodo =
+            interes / divisorFrecuencia;
+
 
         const interesPorPeriodo =
-            monto * (interes / 100);
+            monto * (tasaPorPeriodo / 100);
 
 
         const interesTotal =
@@ -598,7 +667,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
             textoCalculo.textContent =
-                `${moneda(monto)} × ${interes}% = ${moneda(interesPorPeriodo)} de interés por período. ` +
+                (divisorFrecuencia > 1
+                    ? `Tasa mensual ${interes}% ÷ ${divisorFrecuencia} = ${tasaPorPeriodo}% por período ${nombreFrecuencia}. `
+                    : '') +
+                `${moneda(monto)} × ${tasaPorPeriodo}% = ${moneda(interesPorPeriodo)} de interés por período. ` +
                 `${moneda(interesPorPeriodo)} × ${cuotas} ${nombreFrecuencia}(s) = ${moneda(interesTotal)} de interés total. ` +
                 `Total a pagar: ${moneda(totalPagar)}. ` +
                 `Cada cuota: ${moneda(valorCuota)}.`;

@@ -32,6 +32,8 @@ class PrestamoController extends Controller
             'fecha_prestamo' => 'required|date',
             'fecha_primer_pago' => 'required|date',
             'dias_plazo' => 'required|integer|min:0|max:60',
+            'aplica_interes_mora' => 'nullable|boolean',
+            'porcentaje_interes_mora' => 'required_if:aplica_interes_mora,1|nullable|numeric|min:0.01|max:100',
             'observaciones' => 'nullable|string|max:1000',
         ]);
 
@@ -52,15 +54,33 @@ class PrestamoController extends Controller
         |--------------------------------------------------------------------------
         | CÁLCULO DEL INTERÉS
         |--------------------------------------------------------------------------
+        | La tasa de interés que se ingresa es MENSUAL. Si la frecuencia de
+        | pago es semanal o quincenal, hay que prorratearla (dividirla) según
+        | cuántos períodos de ese tipo caben en un mes — si no, se estaría
+        | cobrando la tasa mensual completa en cada cuota semanal/quincenal.
         */
 
-        $interesPorPeriodo = $montoPrestado * ($tasaInteres / 100);
+        $divisorFrecuencia = match ($datos['frecuencia']) {
+            'semanal' => 4,
+            'quincenal' => 2,
+            'mensual' => 1,
+        };
+
+        $tasaPorPeriodo = $tasaInteres / $divisorFrecuencia;
+
+        $interesPorPeriodo = $montoPrestado * ($tasaPorPeriodo / 100);
 
         $interesTotal = $interesPorPeriodo * $numeroCuotas;
 
         $totalPagar = $montoPrestado + $interesTotal;
 
         $valorCuota = $totalPagar / $numeroCuotas;
+
+        $aplicaInteresMora = $request->boolean('aplica_interes_mora');
+
+        $porcentajeInteresMora = $aplicaInteresMora
+            ? $datos['porcentaje_interes_mora']
+            : null;
 
 
         /*
@@ -78,7 +98,9 @@ class PrestamoController extends Controller
             $totalPagar,
             $valorCuota,
             $interesPorPeriodo,
-            $interesTotal
+            $interesTotal,
+            $aplicaInteresMora,
+            $porcentajeInteresMora
         ) {
 
             /*
@@ -107,6 +129,10 @@ class PrestamoController extends Controller
                 'fecha_primer_pago' => $datos['fecha_primer_pago'],
 
                 'dias_plazo' => $datos['dias_plazo'],
+
+                'aplica_interes_mora' => $aplicaInteresMora,
+
+                'porcentaje_interes_mora' => $porcentajeInteresMora,
 
                 'estado' => 'activo',
 
